@@ -8,19 +8,29 @@
 </head>
 <body>
     <header>
-        <h1>Авторизация</h1>
+        <h1><a href="/"><img src="/static/logo.png" alt=""></a>SavvyDeals - сочетание умного подхода и выгодных предложений.</h1>
+        <nav>
+            <a href="/">Главная</a>
+        </nav>
     </header>
-    <main>
+    <main class="withback">
+        <h2>Авторизация</h2>
         <form id="login-form">
+        <div>
             <label for="email">Email:</label>
             <input type="email" id="email" required>
-            
+        </div>
+        <div>
             <label for="password">Пароль:</label>
             <input type="password" id="password" required>
-            
+        </div>
+        <div>
             <button type="submit">Войти</button>
+            <p>Нет аккаунта? <a href="/register">Зарегистрируйтесь</a></p>
+        </div>
         </form>
-        <p>Нет аккаунта? <a href="/register">Зарегистрируйтесь</a></p>
+        <h3>Авторизававшись вы получите доступ к просмотру статистики о предприятиях предоставляющие скидки в веб-приложении, а именно: Катенории предприятий по выгоде и Общая информация о выгоде предприятия</h3>
+
     </main>
     <script src="{{ url_for('static', filename='js/script.js') }}"></script>
 </body>

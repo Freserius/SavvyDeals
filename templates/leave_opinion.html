@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Отзыв</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+</head>
+<body>
+    <header>
+        <h1><a href="/"><img src="/static/logo.png" alt=""></a>SavvyDeals - сочетание умного подхода и выгодных предложений.</h1>
+        <nav>
+            <a href="/">Главная</a>
+        </nav>
+    </header>
+    <main class="withback">
+    <h1>Оставьте мнение о товаре</h1>
+    <form method="POST" id="freeback-form">
+        <p><strong>Юр. лицо:</strong> {{ legal_entity }}</p>
+        <div>
+        <label for="rating">Оценка (1-5):</label>
+        <select id="rating" name="rating" required>
+            <option value="1">1</option>
+            <option value="2">2</option>
+            <option value="3">3</option>
+            <option value="4">4</option>
+            <option value="5">5</option>
+        </select>
+    </div>
+        <br><br>
+    <div>
+        <button type="submit">Отправить</button>
+    </div>
+    </form>
+</main>
+    <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+
+</body>
+</html>

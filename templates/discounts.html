@@ -2,28 +2,58 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <title>Скидки</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SavvyDeals</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
 </head>
 <body>
-    <h1>Добро пожаловать в систему мониторинга скидок!</h1>
-    <div id="discounts-container"></div>
-    <script>
-        fetch('/discounts')
-            .then(response => {
-                if (response.status === 403) {
-                    alert('Доступ запрещен. Авторизуйтесь.');
-                    window.location.href = '/login';
-                }
-                return response.json();
-            })
-            .then(data => {
-                const container = document.getElementById('discounts-container');
-                data.forEach(discount => {
-                    const div = document.createElement('div');
-                    div.textContent = `Название: ${discount.Название}, Средняя скидка: ${discount.Средняя_скидка}`;
-                    container.appendChild(div);
-                });
-            });
-    </script>
+    <header>
+        <h1><a href="/"><img src="/static/logo.png" alt=""></a>SavvyDeals - сочетание умного подхода и выгодных предложений.</h1>
+        <nav>
+            <a href="/">Главная</a>
+            <a href="/logout" id="logout-button">Выход</a>
+            <a href="#" id="stat-link">Выгода</a>
+            <a href="#" id="info-link">Вся выгода</a>
+        </nav>
+    </header>
+
+    <main class="withback">
+    <!-- Контейнер для отображения контента -->
+    <div id="content-container">
+        <h3>В данных таблицах выгода - расчитываеться по среднему размеру скидки предприятия за 2023 и 2024 года.</h3>
+        <!-- Выпадающий список для выбора ЮР лица -->
+        <div id="filter-container">
+            <label for="legal-entity-select">Выберите Группу товаров:</label>
+            <select id="legal-entity-select">
+                <option value="">Любые товары</option>
+                <!-- ЮР лица будут добавлены здесь через JavaScript -->
+            </select>
+        </div>
+        <!-- Контейнер для отображения статистики -->
+        <div id="stat-changes-container" class="stat-changes-container">
+            <div class="category-column">
+                <h3>Крайне выгодные</h3>
+                <ul id="extremely-profitable"></ul>
+            </div>
+            <div class="category-column">
+                <h3>Выгодные</h3>
+                <ul id="profitable"></ul>
+            </div>
+            <div class="category-column">
+                <h3>Невыгодные</h3>
+                <ul id="unprofitable"></ul>
+            </div>
+            <div class="category-column">
+                <h3>Крайне невыгодные</h3>
+                <ul id="extremely-unprofitable"></ul>
+            </div>
+        </div>
+        <div id="standerd-info">
+
+        </div>
+    </div>
+</main>
+
+    <script src="{{ url_for('static', filename='js/script.js') }}"></script>
 </body>
 </html>
