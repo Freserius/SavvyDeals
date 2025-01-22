@@ -16,7 +16,11 @@ window.addEventListener('load', function() {
     // Обновить отступ при изменении размера окна
     window.addEventListener('resize', adjustMainMargin);
   });
+
+  
+
 document.addEventListener("DOMContentLoaded", () => {
+
     // Авторизация
     const loginForm = document.getElementById("login-form");
     if (loginForm) {
@@ -78,34 +82,6 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
 
-    // Обратная связь
-    const feedbackForm = document.getElementById("feedback-form");
-    if (feedbackForm) {
-        feedbackForm.addEventListener("submit", async (e) => {
-            e.preventDefault();
-            const email = document.getElementById("email").value;
-            const message = document.getElementById("message").value;
-
-            try {
-                const response = await fetch("/feedback", {
-                    method: "POST",
-                    headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify({ email, message }),
-                });
-
-                if (!response.ok) {
-                    const error = await response.json();
-                    alert(error.message);
-                    return;
-                }
-
-                const result = await response.json();
-                alert(result.message);
-            } catch (error) {
-                console.error("Ошибка отправки обратной связи:", error);
-            }
-        });
-    }
 
     const logoutButton = document.getElementById("logout-button");
     if (logoutButton) {
@@ -204,7 +180,10 @@ document.addEventListener("DOMContentLoaded", () => {
         data.forEach(item => {
             const tr = document.createElement('tr');
             tr.innerHTML = `
-                <td><a href="https://yandex.ru/search/?text=${item[0]}" target="_blank">${item[0]}</a></td>
+                <td><span class="legal-entity" data-legal-entity="${item[0]}" style="cursor: pointer; color: blue; text-decoration: underline;">
+                    ${item[0]}
+                </span>
+                </td>
                 <td>${item[1]}</td>
                 <td>${item[2]}</td>
                 <td>${item[3]}</td>
@@ -249,9 +228,11 @@ document.addEventListener("DOMContentLoaded", () => {
         if (showStatChanges) {
             statChangesContainer.style.display = 'flex';
             filterContainer.style.display = 'block';
+            document.getElementById('main-inf').style.display=`block`
         } else {
             statChangesContainer.style.display = 'none';
             filterContainer.style.display = 'none';
+            document.getElementById('main-inf').style.display=`none`
         }
     };
 
@@ -295,17 +276,10 @@ document.addEventListener("DOMContentLoaded", () => {
                                 if (selectedCategory === '' || enterprise.Categories.includes(selectedCategory)) {
 
                                 const li = document.createElement('li');
-                                li.innerHTML = `<a href="https://yandex.ru/search/?text=${enterprise.LegalEntity}" target="_blank">${enterprise.LegalEntity}</a>`;
+                                li.innerHTML = `<span class="legal-entity" data-legal-entity="${enterprise.LegalEntity}" style="cursor: pointer; color: blue; text-decoration: underline;">
+                    ${enterprise.LegalEntity}
+                </span>`;
                                 groupColumn.appendChild(li);
-            
-                                // Выводим категории товаров для каждого ЮР лица (не отображаются пользователю)
-                                    // const categories = document.createElement('ul');
-                                    // enterprise.Categories.split(',').forEach(category => {
-                                    //     const categoryItem = document.createElement('li');
-                                    //     categoryItem.textContent = category; // Категории товаров
-                                    //     categories.appendChild(categoryItem);
-                                    // });
-                                    // li.appendChild(categories);
                                 }
                             });
                         }
@@ -394,25 +368,35 @@ document.addEventListener("DOMContentLoaded", () => {
         loadData('/get_discount_info');
     });
 
+    document.addEventListener('click', async (event) => {
+        if (event.target && event.target.classList.contains('legal-entity')) {
+            const legalEntity = event.target.getAttribute('data-legal-entity');
+            try {
+                const response = await fetch(`/get_contact_info/${encodeURIComponent(legalEntity)}`);
+                if (!response.ok) {
+                    throw new Error(`Ошибка загрузки информации: ${response.statusText}`);
+                }
+                const data = await response.json();
+                // document.getElementById('main-inf').style.display=`none`
+                toggleVisibility()
+                // Очистка контейнера перед добавлением новой информации
+                const contentContainerAD = document.getElementById('contact-inf');
+                contentContainer.innerHTML = `
+                    <h2>Контактная информация для ${data.legal_entity}</h2>
+                    <p><strong>Адрес:</strong> ${data.address || 'Нет данных'}</p>
+                    <p><strong>Телефон:</strong> ${data.phone || 'Нет данных'}</p>
+                    <p><strong>Веб-сайт:</strong> ${data.website ? `<a href="https://${data.website}" target="_blank">${data.website}</a>` : 'Нет данных'}</p>
+                    <p><a href="https://yandex.ru/search/?text=${encodeURIComponent(data.legal_entity)}" target="_blank">Найти "${data.legal_entity}" на Яндексе</a></p>
+                `;
+            } catch (error) {
+                console.error('Ошибка при загрузке информации:', error);
+                alert('Не удалось загрузить контактную информацию.');
+            }
+        }
+    });
+
     // opinionLink.addEventListener('click', (e) => {
     //     e.preventDefault();
     //     loadData('/get_public_opinion');
     // });
 });
-    
-
-// Обработчики кликов для сортировки
-                    // const sortableHeaders = document.querySelectorAll('span.sort-arrow');
-                    // sortableHeaders.forEach(header => {
-                    //     header.addEventListener('click', () => {
-                    //         const column = header.getAttribute('sort-arrow');
-                    //         sortState[column] = sortState[column] === 'asc' ? 'desc' : (sortState[column] === 'desc' ? 'none' : 'asc');
-
-                    //         // Сортировка и перерисовка таблицы
-                    //         const sortedData = sortData(data, column, sortState[column]);
-                    //         const table = generateTable(sortedData);
-                    //         const existingTable = document.querySelector('.discount-table');
-                    //         if (existingTable) existingTable.remove();
-                    //         contentContainer.appendChild(table);
-                    //     });
-                    // });

@@ -11,12 +11,18 @@
         <h1><a href="/"><img src="/static/logo.png" alt="SavvyDeals Logo"></a>SavvyDeals - сочетание умного подхода и выгодных предложений.</h1>
         <nav>
             {% if user_id %}
-            <a href="/logout" id="logout-button">Выход</a>
-            {% else %}
-            <a href="/login">Войти</a>
-            <a href="/register">Регистрация</a>
+            <div class="user-info">
+                <span>{{ user_name }} <a href="/logout" id="logout-button">Выход</a></span>
+            </div>
             {% endif %}
-            <a href="/discounts">Скидки</a>
+            <div class="nav-links">
+                <a href="/">Главная</a>
+                <a href="/discounts">Скидки</a>
+                {% if not user_id %}
+                <a href="/login">Войти</a>
+                <a href="/register">Регистрация</a>
+                {% endif %}
+            </div>
         </nav>
     </header>
     <main class="withback">

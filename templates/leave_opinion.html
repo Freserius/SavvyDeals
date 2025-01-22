@@ -10,12 +10,20 @@
     <header>
         <h1><a href="/"><img src="/static/logo.png" alt=""></a>SavvyDeals - сочетание умного подхода и выгодных предложений.</h1>
         <nav>
-            <a href="/">Главная</a>
+            <div class="user-info">
+                <span>{{ user_name }} <a href="/logout" id="logout-button">Выход</a></span>
+            </div>
+            <div class="nav-links">
+                <a href="/">Главная</a>
+            </div>
         </nav>
     </header>
     <main class="withback">
+    <section class="intro-section">
     <h1>Оставьте мнение о товаре</h1>
     <form method="POST" id="freeback-form">
+        <section class="intro-section">
+
         <p><strong>Юр. лицо:</strong> {{ legal_entity }}</p>
         <div>
         <label for="rating">Оценка (1-5):</label>
@@ -32,6 +40,7 @@
         <button type="submit">Отправить</button>
     </div>
     </form>
+    </section>
 </main>
     <script src="{{ url_for('static', filename='js/script.js') }}"></script>
 

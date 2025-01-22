@@ -5,10 +5,32 @@ import bcrypt
 app = Flask(__name__)
 app.secret_key = 'your_secret_key'  # Секретный ключ для сессий
 
+@app.route('/get_contact_info/<legal_entity>', methods=['GET'])
+def get_contact_info(legal_entity):
+    connection = get_db_connection()
+    cursor = connection.cursor()
+    try:
+        cursor.execute("CALL get_contact_info(%s)", (legal_entity,))
+        contact_info = cursor.fetchone()  # Предполагаем, что запрос возвращает одну строку
+        if contact_info:
+            return jsonify({
+                'legal_entity': legal_entity,
+                'address': contact_info[0],
+                'phone': contact_info[1],
+                'website': contact_info[2]
+            })
+        else:
+            return jsonify({'error': 'No contact information found'}), 404
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+    finally:
+        connection.close()
+
+
 # Главная страница
 @app.route('/')
 def index():
-    return render_template('index.html', user_id=session.get('user_id'))
+    return render_template('index.html', user_id=session.get('user_id'), user_name=session.get('user_name'))
 
 # Авторизация
 @app.route('/login', methods=['GET', 'POST'])
@@ -28,10 +50,11 @@ def login():
 
         if not user:
             return jsonify({'message': 'Invalid email or password', 'status': 'error'}), 401
-
+        
         # Проверка пароля
         if bcrypt.checkpw(password.encode('utf-8'), user[2].encode('utf-8')):
             session['user_id'] = user[0]
+            session['user_name'] = user[1]
             return jsonify({'message': 'Login successful', 'status': 'success'}), 200
         else:
             return jsonify({'message': 'Invalid email or password', 'status': 'error'}), 401
@@ -79,7 +102,7 @@ def discounts():
     if 'user_id' not in session:
         return redirect(url_for('login'))  # Если пользователь не авторизован, перенаправляем на страницу входа
     
-    return render_template('discounts.html')
+    return render_template('discounts.html', user_id=session.get('user_id'), user_name=session.get('user_name'))
 
 @app.route('/get_stat_changes', methods=['GET'])
 def get_stat_changes():
@@ -170,7 +193,7 @@ def leave_opinion():
         finally:
             connection.close()
 
-    return render_template('leave_opinion.html', legal_entity=legal_entity)
+    return render_template('leave_opinion.html', legal_entity=legal_entity, user_id=session.get('user_id'), user_name=session.get('user_name'))
 
 
 @app.route('/logout')

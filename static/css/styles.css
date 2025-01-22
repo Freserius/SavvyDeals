@@ -121,15 +121,32 @@ img{
   max-width: 8%;
 }
 nav {
+  display: flex; /* Включаем Flexbox для навигации */
+  align-items: center; /* Выравниваем элементы по вертикали */
+  justify-content: center; /* Центрируем основные ссылки */
   background-color: #8c4c2a;
   padding: 10px;
-  text-align: center;
+  position: relative; /* Для управления размещением дочерних элементов */
+}
+
+nav .user-info {
+  position: absolute; /* Размещаем блок с именем пользователя и кнопкой "Выход" справа */
+  right: 20px;
+  display: flex;
+  align-items: center;
+  gap: 10px; /* Отступ между именем пользователя и кнопкой "Выход" */
+}
+
+nav .user-info span,
+nav .user-info a {
+  font-size: 16px;
+  text-decoration: none;
 }
 
 nav a {
   color: orange;
   text-decoration: none;
-  margin: 10px;
+  margin: 0 10px; /* Отступы между ссылками */
   font-size: 16px;
   transition: all 0.3s ease;
 }
@@ -139,10 +156,6 @@ nav a:hover {
   text-decoration: underline;
 }
 
-nav a.active {
-  font-weight: bold;
-  color: #3498db;
-}
 
 #content-container {
   padding: 20px;
@@ -271,14 +284,20 @@ header nav {
   text-align: center;
 }
 
-header nav a {
+header nav a{
   color: orange;
   text-decoration: none;
   margin: 10px;
   font-size: 16px;
   transition: all 0.3s ease;
 }
-
+span{
+  color: white;
+  text-decoration: none;
+  margin: 10px;
+  font-size: 16px;
+  transition: all 0.3s ease;
+}
 header nav a:hover {
   color: #3498db;
   text-decoration: underline;
